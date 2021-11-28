@@ -2,7 +2,7 @@
   <div id="app">
     <div class="container">
       <div class="search-box">
-        <input type="text" placeholder="search...." class="search-bar">
+        <input type="text" placeholder="search....!!!" class="search-bar">
       </div>
 
       <div class="weather-wrap" v-if="weather.main">
