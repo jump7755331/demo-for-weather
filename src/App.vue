@@ -5,14 +5,14 @@
         <input type="text" placeholder="search...." class="search-bar">
       </div>
 
-      <div class="weather-wrapper">
+      <div class="weather-wrap" v-if="weather.main">
         <div class="location-box">
-          <div class="location">taichung</div>
+          <div class="location">{{weather.name}}</div>
           <div class="date">Octorber 8th 2020</div>
         </div>
         <div class="weather-box">
-          <div class="temperature">26°C</div>
-          <div class="weather">Cloud</div>
+          <div class="temperature">{{Math.round(weather.main.temp)}}°C</div>
+          <div class="weather">{{ weather.weather[0].main }}</div>
         </div>
       </div>
 
@@ -23,7 +23,25 @@
 <script>
 
 export default {
-  name: 'App'
+  name: 'App', 
+  data(){
+    return{
+      api_key: process.env.VUE_APP_WEATHER_KEY,
+      base_url: 'https://api.openweathermap.org/data/2.5/',
+      query: 'china',
+      weather: {},
+      date: ''
+    }
+  }, 
+  methods: {
+      async fetchWeather() {
+        const data = await fetch('${this.base_url}weather?q=${this.query}&units=metric&APPID=${this.api_key}')
+        this.weather = await data.json()
+      }
+  },
+  created() { 
+    this.fetchWeather();
+  }
 }
 </script>
 
