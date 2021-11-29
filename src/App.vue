@@ -1,14 +1,14 @@
 <template>
-  <div id="app">
+  <div id="app" :class="weather.main && weather.main.temp > 16 ? 'warm' : ''">
     <div class="container">
       <div class="search-box">
-        <input type="text" placeholder="search....!!!" class="search-bar">
+        <input type="text" placeholder="search....!!!" class="search-bar" v-model="query" @keyup.enter="fetchWeather">
       </div>
 
       <div class="weather-wrap" v-if="weather.main">
         <div class="location-box">
           <div class="location">{{weather.name}}</div>
-          <div class="date">Octorber 8th 2020</div>
+          <div class="date">{{currentDate}}</div>
         </div>
         <div class="weather-box">
           <div class="temperature">{{Math.round(weather.main.temp)}}°C</div>
@@ -22,27 +22,38 @@
 
 <script>
 
+import dayjs from 'dayjs'
+import advancedFormat from 'dayjs/plugin/advancedFormat'
+
+dayjs.extend(advancedFormat);
+
 export default {
   name: 'App', 
   data(){
     return{
       api_key: process.env.VUE_APP_WEATHER_KEY,
       base_url: 'https://api.openweathermap.org/data/2.5/',
-      query: 'china',
+      query: 'Taichung',
       weather: {},
       date: ''
     }
   }, 
   methods: {
       async fetchWeather() {
-        const data = await fetch('${this.base_url}weather?q=${this.query}&units=metric&APPID=${this.api_key}')
+        const data = await fetch(`${this.base_url}weather?q=${this.query}&units=metric&APPID=${this.api_key}`);
         this.weather = await data.json()
       }
+  },
+  computed: {
+    currentDate() {
+      return dayjs().format('MMMM Do YYYY')
+    },
   },
   created() { 
     this.fetchWeather();
   }
-}
+};
+
 </script>
 
 <style>
